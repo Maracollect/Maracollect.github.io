@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casino Wheel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: grey;
+    }
+     .account-icon {
+      width: 40px;
+      height: 40px;
+      color: indigo;
+      padding: 30px;
+      border-radius: 60%;
+      background-color: grey;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+    .account-icon img {
+      width: 100%;
+      height: 100%;
+      border-radius: 60%;
+    }
+    .wheel-container {
+      position: relative;
+      margin: 50px auto;
+      width: 300px;
+      height: 300px;
+    }
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+        #f39c12 0deg 45deg, 
+        #e74c3c 45deg 90deg, 
+        #8e44ad 90deg 135deg, 
+        #3498db 135deg 180deg, 
+        #2ecc71 180deg 225deg,
+        #f39c12 225deg 270deg,
+        #e74c3c 270deg 315deg,
+        #8e44ad 315deg 360deg
+      );
+      position: relative;
+      transition: transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    }
+    .arrow {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 20px solid black;
+    }
+    .banner {
+      display: none;
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: grey;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      z-index: 1000;
+    }
+    .banner h2 {
+      color: #2ecc71;
+    }
+    .banner button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .banner button:hover {
+      background-color: #c0392b;
+    }
+    .spin-button {
+      margin-top: 20px;
+      padding: 20px 80px;
+      background-color: indigo;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .spin-button:hover {
+      background-color: #218838;
+    }
+    .info {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    .link-container {
+      margin-top: 20px;
+      display: none;
+    }
+    .copy-link-button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .copy-link-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+   <!-- Header Section with Account Icon -->
+  <div class="header">
+    <div class="account-icon" onclick="window.location.href='https://Withdrews.github.io'">
+      <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Account Icon">
+      <p>My account</p>
+    </div>
+  </div>
+  <h1>Spin the Casino Wheel!</h1>
+  <div class="wheel-container">
+    <div class="arrow"></div>
+    <div class="wheel" id="wheel"></div>
+  </div>
+  <button class="spin-button" id="spinButton" onclick="spinWheel()">Spin</button>
+  <p class="info" id="spinInfo">You have 1 free spin left</p>
+
+  <div class="link-container" id="linkContainer">
+    <p>Share this link with your friends to earn a free spin:</p>
+    <input type="text" id="shareLink" value="https://example.com/casino" readonly>
+    <button class="copy-link-button" onclick="copyLink()">Copy Link</button>
+  </div>
+
+  <div class="banner" id="banner">
+    <h2>Congratulations!</h2>
+    <p id="prizeText">You have won 75% cashback. Deposit any amount from ksh 50 and withdraw with a bonus of 75%!</p>
+    <button onclick="closeBanner()">Close</button>
+  </div>
+
+  <script>
+    let spinsLeft = 1;
+    const spinButton = document.getElementById('spinButton');
+    const spinInfo = document.getElementById('spinInfo');
+    const linkContainer = document.getElementById('linkContainer');
+    const banner = document.getElementById('banner');
+    const wheel = document.getElementById('wheel');
+    const prizeText = document.getElementById('prizeText');
+    const shareLink = document.getElementById('shareLink');
+
+    function spinWheel() {
+      if (spinsLeft > 0) {
+        spinsLeft--;
+        spinInfo.textContent = `You have ${spinsLeft} spins left`;
+        const rotation = Math.floor(Math.random() * 360 + 3600); // Random spins
+        wheel.style.transform = `rotate(${rotation}deg)`;
+
+        setTimeout(() => {
+          if (spinsLeft === 0) {
+            linkContainer.style.display = 'block'; // Show the share link
+          }
+          if (spinsLeft === 1) {
+            prizeText.textContent = 'You have won 20 Ksh!';
+          }
+          banner.style.display = 'block';
+        }, 5000); // Spin duration
+      } else {
+        alert('No spins left! Share the link to earn a free spin.');
+      }
+    }
+
+    function copyLink() {
+      shareLink.select();
+      shareLink.setSelectionRange(0, 99999); // For mobile devices
+      navigator.clipboard.writeText(shareLink.value)
+        .then(() => {
+          alert('Link copied! You have earned a free spin.');
+          spinsLeft++;
+          spinInfo.textContent = `You have ${spinsLeft} spins left`;
+          linkContainer.style.display = 'none'; // Hide the link section
+        })
+        .catch(() => alert('Failed to copy link.'));
+    }
+
+    function closeBanner() {
+      banner.style.display = 'none';
+    }
+  </script>
+</body>
+  </html>
